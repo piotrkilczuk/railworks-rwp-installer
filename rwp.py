@@ -19,7 +19,7 @@ class RwpInstaller:
     def get_railworks_path(self):
         steam_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Software\\Valve\\Steam')
         steam_path = winreg.QueryValueEx(steam_key, 'SteamPath')[0]
-        return os.path.join(steam_path, 'steamApps', 'common', 'railworks', 'plugins')
+        return os.path.join(steam_path, 'steamApps', 'common', 'railworks')
 
     def output(self, out, wait=False):
         if wait:
