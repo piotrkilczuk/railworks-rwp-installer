@@ -6,4 +6,5 @@ convert media\icon256.png media\icon128.png media\icon64.png media\icon32.png bu
 REM Build EXE
 .\venv\Scripts\pyinstaller.exe rwp.py --onefile --console --name rwpinstaller --icon build\icon.ico
 
-REM @TODO: sign digitally
+REM Sign digitally
+signtool sign /a dist/rwpinstaller.exe
