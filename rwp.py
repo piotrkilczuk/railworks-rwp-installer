@@ -11,10 +11,22 @@ class RwpInstaller:
     def extract(self, target):
         with zipfile.ZipFile(target) as z:
             if z.testzip():
-                return self.output('Corrupt file {}'.format(target))
-            self.output('{} file valid'.format(target))
-            z.extractall(self.railworks_path)
-            self.output('{} extracted successfully'.format(target))
+                return self.output('Corrupt file {}\n'.format(target))
+            self.output('{} file valid\n\n'.format(target))
+
+            extracted = 0
+            to_be_extracted = len(z.infolist())
+            for file in z.infolist():
+                extracted_path = z.extract(file, self.railworks_path).replace(self.railworks_path, '')
+                extracted += 1
+
+                percent_complete = extracted / to_be_extracted
+                self.output('[{}/{} {}] {}\r'.format(
+                    extracted, to_be_extracted,
+                    (round(percent_complete * 10) * '*').ljust(10),
+                    extracted_path[-55:]))
+
+            self.output('\n\n{} extracted successfully'.format(os.path.basename(target)))
 
     def get_railworks_path(self):
         steam_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Software\\Valve\\Steam')
@@ -25,7 +37,7 @@ class RwpInstaller:
         if wait:
             input(out)
         else:
-            print(out)
+            sys.stdout.write(out)
 
     def main(self):
         targets = sys.argv[1:]
@@ -37,7 +49,7 @@ class RwpInstaller:
         for target in targets:
             self.extract(target)
 
-        self.output('All done. Thanks for using RWP Installer.', wait=True)
+        self.output('\n\nAll done. Thanks for using RWP Installer.', wait=True)
 
 
 if __name__ == '__main__':
